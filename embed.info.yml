@@ -2,4 +2,5 @@ name: Embed
 type: module
 description: 'Provides a framework for different types of embeds in text editors.'
 core: 8.x
+core_version_requirement: ^8 || ^9
 configure: entity.embed_button.collection
