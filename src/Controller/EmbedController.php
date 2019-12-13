@@ -42,6 +42,7 @@ class EmbedController extends ControllerBase {
       '#type' => 'processed_text',
       '#text' => $text,
       '#format' => $filter_format->id(),
+      '#langcode' => $this->languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId(),
     ];
 
     $response = new AjaxResponse();
