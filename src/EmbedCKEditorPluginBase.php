@@ -80,12 +80,17 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
    *   The array for use with getButtons().
    */
   protected function getButton(EmbedButtonInterface $embed_button) {
-    return [
+    $info = [
       'id' => $embed_button->id(),
       'name' => Html::escape($embed_button->label()),
       'label' => Html::escape($embed_button->label()),
       'image' => $embed_button->getIconUrl(),
     ];
+    $definition = $this->getPluginDefinition();
+    if (!empty($definition['required_filter_plugin_id'])) {
+      $info['required_filter_plugin_id'] = $definition['required_filter_plugin_id'];
+    }
+    return $info;
   }
 
   /**
