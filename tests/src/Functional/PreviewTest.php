@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\embed\Tests;
+namespace Drupal\Tests\embed\Functional;
 
 /**
  * Tests the preview controller and route.

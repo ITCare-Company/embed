@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\embed\Tests;
+namespace Drupal\Tests\embed\Functional;
 
 use Drupal\editor\Entity\Editor;
+use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
  * Tests EmbedButtonEditorAccessCheck.
@@ -10,6 +11,8 @@ use Drupal\editor\Entity\Editor;
  * @group embed
  */
 class EmbedButtonEditorAccessCheckTest extends EmbedTestBase {
+
+  use AssertPageCacheContextsAndTagsTrait;
 
   const SUCCESS = 'Success!';
 
