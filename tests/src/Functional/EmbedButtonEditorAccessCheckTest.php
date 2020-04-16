@@ -17,6 +17,11 @@ class EmbedButtonEditorAccessCheckTest extends EmbedTestBase {
   const SUCCESS = 'Success!';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests \Drupal\embed\Access\EmbedButtonEditorAccessCheck.
    */
   public function testEmbedButtonEditorAccessCheck() {

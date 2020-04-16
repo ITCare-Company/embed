@@ -12,6 +12,11 @@ class PreviewTest extends EmbedTestBase {
   const SUCCESS = 'Success!';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the route used for generating preview of embedding entities.
    */
   public function testPreviewRoute() {

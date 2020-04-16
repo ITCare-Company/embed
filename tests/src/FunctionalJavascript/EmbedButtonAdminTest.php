@@ -14,6 +14,11 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 class EmbedButtonAdminTest extends WebDriverTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Modules to enable.
    *
    * @var array
