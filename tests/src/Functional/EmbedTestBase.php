@@ -29,6 +29,11 @@ abstract class EmbedTestBase extends BrowserTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The test administrative user.
    *
    * @var \Drupal\user\UserInterface
