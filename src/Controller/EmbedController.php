@@ -52,7 +52,7 @@ class EmbedController extends ControllerBase {
   /**
    * Returns an Ajax response to generate preview of embedded items.
    *
-   * Expects the the HTML element as GET parameter.
+   * Expects the HTML element as GET parameter.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
@@ -101,7 +101,7 @@ class EmbedController extends ControllerBase {
   /**
    * Returns an Ajax response to generate preview of an entity.
    *
-   * Expects the the HTML element as GET parameter.
+   * Expects the HTML element as GET parameter.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
