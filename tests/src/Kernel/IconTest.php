@@ -46,7 +46,7 @@ class IconTest extends KernelTestBase {
       'type_id' => 'embed_test_default',
     ]);
     $this->assertEmpty($button->icon);
-    $this->assertIconUrl('/default.png', $button);
+    $this->assertIconUrl($this->container->get('extension.list.module')->getPath('embed_test') . '/default.png', $button);
 
     $uri = 'public://button.png';
     $image_contents = file_get_contents('core/misc/favicon.ico');
