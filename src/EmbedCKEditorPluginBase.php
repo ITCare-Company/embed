@@ -3,11 +3,11 @@
 namespace Drupal\embed;
 
 use Drupal\ckeditor\CKEditorPluginBase;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\editor\Entity\Editor;
-use Drupal\embed\Entity\EmbedButton;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -16,11 +16,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The embed button query.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\Query\QueryInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterfac
    */
-  protected $embedButtonQuery;
+  protected $entityTypeManager;
 
   /**
    * Constructs a Drupal\entity_embed\Plugin\CKEditorPlugin\DrupalEntity object.
@@ -31,14 +31,14 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\Query\QueryInterface $embed_button_query
-   *   The entity query object for embed button.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryInterface $embed_button_query) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->embedButtonQuery = $embed_button_query;
-    if (!empty($plugin_definition['embed_type_id'])) {
-      $this->embedButtonQuery->condition('type_id', $plugin_definition['embed_type_id']);
+    $this->entityTypeManager = $entity_type_manager;
+    if (!isset($plugin_definition['embed_type_id'])) {
+      throw new InvalidPluginDefinitionException($plugin_id, sprintf('The %s plugin must define the embed_type_id property.', $plugin_id));
     }
   }
 
@@ -50,7 +50,7 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')->getStorage('embed_button')->getQuery()
+      $container->get('entity_type.manager')
     );
   }
 
@@ -60,8 +60,7 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
   public function getButtons() {
     $buttons = [];
 
-    if ($ids = $this->embedButtonQuery->execute()) {
-      $embed_buttons = EmbedButton::loadMultiple($ids);
+    if ($embed_buttons = $this->entityTypeManager->getStorage('embed_button')->loadByProperties(['type_id' => $this->pluginDefinition['embed_type_id']])) {
       foreach ($embed_buttons as $embed_button) {
         $buttons[$embed_button->id()] = $this->getButton($embed_button);
       }
