@@ -23,7 +23,7 @@ class EmbedButtonAdminTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'embed',
     'embed_test',

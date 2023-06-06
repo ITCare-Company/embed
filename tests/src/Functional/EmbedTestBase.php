@@ -20,7 +20,7 @@ abstract class EmbedTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'embed',
     'embed_test',

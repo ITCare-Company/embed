@@ -17,7 +17,7 @@ class IconTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'embed',
     'embed_test',
