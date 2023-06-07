@@ -12,7 +12,7 @@ function embed_requirements($phase): array {
   $requirements = [];
 
   if ($phase === 'runtime') {
-    // Since CKEditor5 is installed, perform a check for any icons that are not SVG files.
+    // Check for any icons that are not SVG files when CKEditor5 is installed.
     if (\Drupal::moduleHandler()->moduleExists('ckeditor5')) {
       $button_icons_not_svg = [];
       /** @var \Drupal\embed\Entity\EmbedButton[] $buttons */
