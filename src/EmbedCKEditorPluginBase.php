@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\embed;
 
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\editor\Entity\Editor;
+use Drupal\embed\Controller\EmbedController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,9 +22,16 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterfac
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
+
+  /**
+   * The CSRF token generator.
+   *
+   * @var \Drupal\Core\Access\CsrfTokenGenerator
+   */
+  protected $csrfTokenGenerator;
 
   /**
    * Constructs a Drupal\entity_embed\Plugin\CKEditorPlugin\DrupalEntity object.
@@ -33,10 +44,13 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token_generator
+   *   The CSRF token generator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, CsrfTokenGenerator $csrf_token_generator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
+    $this->csrfTokenGenerator = $csrf_token_generator;
     if (!isset($plugin_definition['embed_type_id'])) {
       throw new InvalidPluginDefinitionException($plugin_id, sprintf('The %s plugin must define the embed_type_id property.', $plugin_id));
     }
@@ -45,19 +59,20 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('csrf_token')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getButtons() {
+  public function getButtons(): array {
     $buttons = [];
 
     if ($embed_buttons = $this->entityTypeManager->getStorage('embed_button')->loadByProperties(['type_id' => $this->pluginDefinition['embed_type_id']])) {
@@ -78,7 +93,7 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
    * @return array
    *   The array for use with getButtons().
    */
-  protected function getButton(EmbedButtonInterface $embed_button) {
+  protected function getButton(EmbedButtonInterface $embed_button): array {
     $info = [
       'id' => $embed_button->id(),
       'name' => Html::escape($embed_button->label()),
@@ -95,10 +110,17 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
   /**
    * {@inheritdoc}
    */
-  public function getLibraries(Editor $editor) {
+  public function getLibraries(Editor $editor): array {
     return [
       'embed/embed',
     ];
+  }
+
+  /**
+   * Get the embed preview route CSRF token.
+   */
+  public function getEmbedPreviewCsrfToken(): string {
+    return $this->csrfTokenGenerator->get(EmbedController::PREVIEW_CSRF_TOKEN_NAME);
   }
 
 }
