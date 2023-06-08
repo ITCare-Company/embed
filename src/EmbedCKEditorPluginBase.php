@@ -59,7 +59,7 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
@@ -72,7 +72,7 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
   /**
    * {@inheritdoc}
    */
-  public function getButtons(): array {
+  public function getButtons() {
     $buttons = [];
 
     if ($embed_buttons = $this->entityTypeManager->getStorage('embed_button')->loadByProperties(['type_id' => $this->pluginDefinition['embed_type_id']])) {
@@ -93,7 +93,7 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
    * @return array
    *   The array for use with getButtons().
    */
-  protected function getButton(EmbedButtonInterface $embed_button): array {
+  protected function getButton(EmbedButtonInterface $embed_button) {
     $info = [
       'id' => $embed_button->id(),
       'name' => Html::escape($embed_button->label()),
@@ -110,7 +110,7 @@ abstract class EmbedCKEditorPluginBase extends CKEditorPluginBase implements Con
   /**
    * {@inheritdoc}
    */
-  public function getLibraries(Editor $editor): array {
+  public function getLibraries(Editor $editor) {
     return [
       'embed/embed',
     ];
