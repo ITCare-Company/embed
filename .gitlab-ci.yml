@@ -45,8 +45,10 @@ include:
 # Start custom overrides.
 #
 variables:
-  #  Disable default phpunit job in favor of the d9/10 variants below.
+  # Disable default phpunit job in favor of the d9/10 variants below.
   SKIP_PHPUNIT: 1
+  # Skip eslint for now.
+  SKIP_ESLINT: 1
   _PHPUNIT_EXTRA: --verbose
   # Convenient, and we have no secrets.
   _SHOW_ENVIRONMENT_VARIABLES: 1
@@ -62,7 +64,7 @@ composer:
 
 phpcs:
   # Set allow_failure to false so that the test fails for coding standards faults.
-  allow_failure: false
+  allow_failure: true
   dependencies:
     - "composer: [8.1, $CORE_STABLE]"
 

@@ -1,7 +1,12 @@
 <?php
 
-use Drupal\Core\Form\FormStateInterface;
+/**
+ * @file
+ * Framework for creating embed buttons for WYSIWYG editors.
+ */
+
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -93,7 +98,7 @@ function embed_filter_format_edit_form_validate($form, FormStateInterface $form_
     };
 
     foreach ($buttons_to_validate as $button_id => $filter_plugin_id) {
-      list($plugin_id, $button_id) = explode(':', $button_id, 2);
+      [$plugin_id, $button_id] = explode(':', $button_id, 2);
       if (in_array($button_id, $selected_buttons, TRUE)) {
         $filter_enabled = $form_state->getValue([
           'filters',
