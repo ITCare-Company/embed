@@ -125,7 +125,7 @@ class EmbedButtonForm extends EntityForm {
 
     $validate_extensions = $has_ckeditor5 ? 'svg' : 'gif png jpg jpeg svg';
     // First parameter is maximum dimensions, second is minimum dimensions.
-    $validate_dimensions = $has_ckeditor5 ? [0, 0] :  ['32x32', '16x16'];
+    $validate_dimensions = $has_ckeditor5 ? [0, 0] : ['32x32', '16x16'];
 
     $validators = [];
     if (version_compare(\Drupal::VERSION, '10.2', '<')) {

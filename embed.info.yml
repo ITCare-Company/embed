@@ -6,3 +6,4 @@ package: Filters
 configure: entity.embed_button.collection
 test_dependencies:
   - drupal:ckeditor
+  - drupal:ckeditor5
