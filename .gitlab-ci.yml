@@ -44,7 +44,6 @@ include:
 #
 # Start custom overrides.
 #
-
 variables:
   #  Disable default phpunit job in favor of the d9/10 variants below.
   SKIP_PHPUNIT: 1
@@ -78,6 +77,10 @@ eslint:
 stylelint:
   dependencies:
     - "composer: [8.1, $CORE_STABLE]"
+
+.phpunit-local:
+  variables:
+    SKIP_PHPUNIT: 0
 
 phpunit-d9:
   needs:
