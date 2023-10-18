@@ -104,6 +104,8 @@ phpunit-d10:
             _TARGET_CORE: $CORE_STABLE
   variables:
     _TARGET_PHP: "8.1"
+  before_script:
+    - composer require drupal/ckeditor
   extends:
     - .phpunit-base
     - .phpunit-local
