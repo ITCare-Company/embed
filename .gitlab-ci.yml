@@ -36,8 +36,6 @@ include:
     ref: $_GITLAB_TEMPLATES_REF
     file:
       - '/includes/include.drupalci.main.yml'
-      # EXPERIMENTAL: For Drupal 7, remove the above line and uncomment the below.
-      # - '/includes/include.drupalci.main-d7.yml'
       - '/includes/include.drupalci.variables.yml'
       - '/includes/include.drupalci.workflows.yml'
 
@@ -52,19 +50,19 @@ variables:
   _PHPUNIT_EXTRA: --verbose
   # Convenient, and we have no secrets.
   _SHOW_ENVIRONMENT_VARIABLES: 1
+  # Remove this when available upstream.
+  CORE_PREVIOUS_PHP_MIN: "7.3"
 
 # Run two variations of composer job.
 composer:
   parallel:
     matrix:
-      - _TARGET_PHP: [ "7.3" ]
+      - _TARGET_PHP: [ $CORE_PREVIOUS_PHP_MIN ]
         _TARGET_CORE: [ $CORE_PREVIOUS_STABLE ]
       - _TARGET_PHP: [ $CORE_PHP_MIN ]
         _TARGET_CORE: [ $CORE_STABLE ]
 
 phpcs:
-  # Set allow_failure to false so that the test fails for coding standards faults.
-  allow_failure: true
   dependencies:
     - "composer: [$CORE_PHP_MIN, $CORE_STABLE]"
 
@@ -89,10 +87,10 @@ phpunit-d9:
     - job: composer
       parallel:
         matrix:
-          - _TARGET_PHP: "7.3"
+          - _TARGET_PHP: $CORE_PREVIOUS_PHP_MIN
             _TARGET_CORE: $CORE_PREVIOUS_STABLE
   variables:
-    _TARGET_PHP: "7.3"
+    _TARGET_PHP: $CORE_PREVIOUS_PHP_MIN
   extends:
     - .phpunit-base
     - .phpunit-local
@@ -106,8 +104,6 @@ phpunit-d10:
             _TARGET_CORE: $CORE_STABLE
   variables:
     _TARGET_PHP: $CORE_PHP_MIN
-  before_script:
-    - composer require drupal/ckeditor
   extends:
     - .phpunit-base
     - .phpunit-local
