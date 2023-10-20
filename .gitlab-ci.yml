@@ -58,7 +58,7 @@ composer:
   parallel:
     matrix:
       - _TARGET_PHP: [ "7.3" ]
-        _TARGET_CORE: [ "9.5.11" ]
+        _TARGET_CORE: [ "$CORE_PREVIOUS_STABLE" ]
       - _TARGET_PHP: [ "8.1" ]
         _TARGET_CORE: [ "$CORE_STABLE" ]
 
@@ -90,7 +90,7 @@ phpunit-d9:
       parallel:
         matrix:
           - _TARGET_PHP: "7.3"
-            _TARGET_CORE: "9.5.11"
+            _TARGET_CORE: $CORE_PREVIOUS_STABLE
   variables:
     _TARGET_PHP: "7.3"
   extends:
