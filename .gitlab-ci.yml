@@ -11,67 +11,9 @@ include:
 # Start custom overrides.
 #
 variables:
-  # Disable default phpunit job in favor of the d9/10 variants below.
-  SKIP_PHPUNIT: 1
-  # Skip eslint for now.
-  SKIP_ESLINT: 1
-  # Convenient, and we have no secrets.
-  _SHOW_ENVIRONMENT_VARIABLES: 1
-  # Remove this when available upstream.
-  CORE_PREVIOUS_PHP_MIN: "7.3"
-
-# Run two variations of composer job.
-composer:
-  parallel:
-    matrix:
-      - _TARGET_PHP: [ $CORE_PREVIOUS_PHP_MIN ]
-        _TARGET_CORE: [ $CORE_PREVIOUS_STABLE ]
-      - _TARGET_PHP: [ $CORE_PHP_MIN ]
-        _TARGET_CORE: [ $CORE_STABLE ]
-
-phpcs:
-  dependencies:
-    - "composer: [$CORE_PHP_MIN, $CORE_STABLE]"
-
-composer-lint:
-  dependencies:
-    - "composer: [$CORE_PHP_MIN, $CORE_STABLE]"
-
-eslint:
-  dependencies:
-    - "composer: [$CORE_PHP_MIN, $CORE_STABLE]"
-
-stylelint:
-  dependencies:
-    - "composer: [$CORE_PHP_MIN, $CORE_STABLE]"
-
-.phpunit-local:
-  variables:
-    SKIP_PHPUNIT: 0
-
-phpunit-d9:
-  needs:
-    - job: composer
-      parallel:
-        matrix:
-          - _TARGET_PHP: $CORE_PREVIOUS_PHP_MIN
-            _TARGET_CORE: $CORE_PREVIOUS_STABLE
-  variables:
-    _TARGET_PHP: $CORE_PREVIOUS_PHP_MIN
-  extends:
-    - .phpunit-base
-    - .phpunit-local
-
-phpunit-d10:
-  needs:
-    - job: composer
-      parallel:
-        matrix:
-          - _TARGET_PHP: $CORE_PHP_MIN
-            _TARGET_CORE: $CORE_STABLE
-  variables:
-    _TARGET_PHP: $CORE_PHP_MIN
-  extends:
-    - .phpunit-base
-    - .phpunit-local
+  # Broaden test coverage.
+  OPT_IN_TEST_PREVIOUS_MAJOR: 1
+  OPT_IN_TEST_PREVIOUS_MINOR: 1
+  OPT_IN_TEST_NEXT_MINOR: 1
+  OPT_IN_TEST_MAX_PHP: 1
 
