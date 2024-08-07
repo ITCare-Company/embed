@@ -2,6 +2,7 @@
 
 namespace Drupal\embed\Controller;
 
+use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Ajax\AjaxResponse;
@@ -41,6 +42,13 @@ class EmbedController extends ControllerBase {
   protected $csrfToken;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * The CSRF token name.
    *
    * @var string
@@ -54,10 +62,13 @@ class EmbedController extends ControllerBase {
    *   The renderer service.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current_user.
    */
-  public function __construct(RendererInterface $renderer, CsrfTokenGenerator $csrf_token) {
+  public function __construct(RendererInterface $renderer, CsrfTokenGenerator $csrf_token, AccountInterface $current_user) {
     $this->renderer = $renderer;
     $this->csrfToken = $csrf_token;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -66,7 +77,8 @@ class EmbedController extends ControllerBase {
   public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('renderer'),
-      $container->get('csrf_token')
+      $container->get('csrf_token'),
+      $container->get('current_user'),
     );
   }
 
@@ -87,7 +99,7 @@ class EmbedController extends ControllerBase {
    *   The preview of the embedded item specified by the data attributes.
    */
   public function preview(Request $request, FilterFormatInterface $filter_format) {
-    $this->checkCsrf($request, \Drupal::currentUser());
+    $this->checkCsrf($request, $this->currentUser);
 
     $text = $request->get('text') ?: $request->get('value');
     if (empty($text)) {
@@ -107,7 +119,13 @@ class EmbedController extends ControllerBase {
       return $response;
     }
     else {
-      $html = $this->renderer->renderPlain($build);
+      $html = DeprecationHelper::backwardsCompatibleCall(
+        currentVersion: \Drupal::VERSION,
+        deprecatedVersion: '10.3',
+        currentCallable: fn() => $this->renderer->renderInIsolation($build),
+        deprecatedCallable: fn() => $this->renderer->renderPlain($build),
+      );
+
       // Note that we intentionally do not use:
       // - \Drupal\Core\Cache\CacheableResponse because caching it on the server
       //   side is wasteful, hence there is no need for cacheability metadata.

@@ -33,6 +33,7 @@ class DomHelperTraitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp(): void {
+    parent::setUp();
     $this->document = Html::load('<outer><test foo="bar" namespace:foo="bar"><test bar="foo"></test></test></outer>');
     $this->node = $this->document->getElementsByTagName('body')->item(0)->firstChild->firstChild;
   }
@@ -59,7 +60,7 @@ class DomHelperTraitTest extends UnitTestCase {
   /**
    * Data provider for testSetNodeContent().
    */
-  public function providerTestSetNodeContent(): array {
+  public static function providerTestSetNodeContent(): array {
     return [
       'empty' => [
         '',
@@ -97,7 +98,7 @@ class DomHelperTraitTest extends UnitTestCase {
   /**
    * Data provider for testReplaceNodeContent().
    */
-  public function providerTestReplaceNodeContent(): array {
+  public static function providerTestReplaceNodeContent(): array {
     return [
       'empty' => [
         '',
