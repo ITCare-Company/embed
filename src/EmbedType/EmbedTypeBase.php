@@ -5,16 +5,14 @@ namespace Drupal\embed\EmbedType;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a base implementation that most embed type plugins will extend.
  *
  * @ingroup embed_api
  */
-abstract class EmbedTypeBase extends PluginBase implements EmbedTypeInterface, ContainerFactoryPluginInterface {
+abstract class EmbedTypeBase extends PluginBase implements EmbedTypeInterface {
 
   /**
    * The module list service.
@@ -26,22 +24,9 @@ abstract class EmbedTypeBase extends PluginBase implements EmbedTypeInterface, C
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ModuleExtensionList $module_extension_list,) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->moduleList = $module_extension_list;
     $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $this->configuration);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('extension.list.module'),
-    );
   }
 
   /**
@@ -127,6 +112,9 @@ abstract class EmbedTypeBase extends PluginBase implements EmbedTypeInterface, C
    *   The module extension list service.
    */
   protected function getModuleList(): ModuleExtensionList {
+    if (!$this->moduleList) {
+      $this->moduleList = \Drupal::service('extension.list.module');
+    }
     return $this->moduleList;
   }
 

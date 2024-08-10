@@ -35,7 +35,7 @@ class Aircraft extends EmbedTypeBase {
         'aerostats' => $this->t('Lighter than air (aerostats)'),
         'fixed-wing' => $this->t('Fixed-wing'),
         'rotorcraft' => $this->t('Rotorcraft'),
-        'helicopters' => $this->t('Helicopters'),
+        'helicopters' => $this->t('Helicopers'),
         'invalid' => $this->t('Invalid type'),
       ],
       '#default_value' => $this->getConfigurationValue('aircraft_type'),
