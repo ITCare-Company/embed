@@ -3,5 +3,5 @@ type: module
 description: 'Support module for the Embed module tests.'
 package: Testing
 dependencies:
-  - embed
-  - node
+  - embed:embed
+  - drupal:node
