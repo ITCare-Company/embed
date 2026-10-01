@@ -32,7 +32,7 @@ function embed_requirements($phase): array {
             '#theme' => 'item_list',
             '#items' => $button_icons_not_svg,
           ],
-          'severity' => REQUIREMENT_ERROR,
+          'severity' => (class_exists('\\Drupal\\Core\\Extension\\Requirement\\RequirementSeverity') ? \Drupal\Core\Extension\Requirement\RequirementSeverity::Error : REQUIREMENT_ERROR),
         ];
       }
     }
